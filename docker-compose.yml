@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  app_dev:
+    build: .
+    ports:
+      - "30000:3000"
+    depends_on:
+      - db_dev
+    env_file: .env
+    command: ["sh", "-c", "tail -f /dev/null"]
+    volumes:
+      - .:/app
+    networks:
+      - app_network
+
+  db_dev:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: my_database
+      MYSQL_USER: app_dev_user
+      MYSQL_PASSWORD: root
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    # driver: bridge
